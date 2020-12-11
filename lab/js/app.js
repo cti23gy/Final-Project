@@ -3,19 +3,19 @@ let time = 0;           //Several variables / flags used throughout program
 let proTimer = 0;
 let bossTimer = 0;
 let bossReady = false;
-let bossHP = 10;
+let bossHP = 10;        //Boss HP stored here
 let bossColorAdd = 0;
 let didChange = false;
 let gameStart = false;
 let gameWin = false;
 let noUse = false;
-let element = document.getElementById("image1");
+let element = document.getElementById("image1"); //reference button to start
 
 function itsClicked(event) {
-    let response = event.target.getAttribute("data-color");
+    let response = event.target.getAttribute("data-color"); //change button color
     console.log(response);
     event.target.style.backgroundColor = response;
-    gameStart = true;
+    gameStart = true;      //start the game flag
     didChange = false;
 }
 
@@ -47,7 +47,7 @@ var Character = {
 }
 
 var rectangles = [ //bullets
-    { x: 999, y: 0, w: 75, h: 45, speed: 2 },
+    { x: 999, y: 0, w: 75, h: 45, speed: 2 },      //many objects are place off screen at start and when interacted with  i.e. "x: 999"
     { x: 999, y: 100, w: 75, h: 45, speed: 2 },
     { x: 999, y: 50, w: 75, h: 45, speed: 2 },
     { x: 999, y: 200, w: 75, h: 45, speed: 2 },
@@ -61,15 +61,15 @@ var rectanglesD = [ // diagonal bullets
 
 var boss = [ // boss objects
     { x: 999, y: -100, w: 100, h: 50, speed: 4}, //base
-    { x: 999, y: -100, w: 40, h: 70, speed: 4}, //cannon
-    { x: 999, y: -100, w: 40, h: 70, speed: 4} //cannon
+    { x: 999, y: -100, w: 40, h: 70, speed: 4}, 
+    { x: 999, y: -100, w: 40, h: 70, speed: 4} 
 ]
 
-var bossP = [
+var bossP = [ //boss bullet
     { x: 999, y: 999, w: 60, h: 60, speed: 8},
 ]
 
-var projectiles = [ // diagonal bullets
+var projectiles = [ // character bullet
     { x: 999, y: 0, w: 6, h: 15, speed: 10}
 ]
 
@@ -84,7 +84,7 @@ function collideRect(circleX, circleY, rectX, rectY, rectW, rectH) { //rectangle
 }
 
 
-function spawn1() { //create bullets from array
+function spawn1() { //spawn bullets from array
     for(var i = 0; i < rectangles.length; i++) { //movement for bullets
         fill(0, 68, 255);
         let currentR = rectangles[i];
@@ -105,7 +105,7 @@ function spawn1() { //create bullets from array
 }
 
 
-function spawn2() {
+function spawn2() { //spawn secondary bullets from array
     for(var i = 0; i < rectanglesD.length; i++) { //movement for diagonal bullets
         fill(0, 220, 255);
         let currentRD = rectanglesD[i];
@@ -127,11 +127,11 @@ function spawn2() {
     }
 }
 
-function spawn3() {    
+function spawn3() {     //spawn boss
     if (bossTimer > 180) {
         bossReady = true;       
     }
-    bossTimer++;                                                 //Check this one fix movement!!!!!!!!!!!!!!!!!!!!!!! 
+    bossTimer++;                                                 
     for(var i = 0; i < boss.length; i++) { //movement for bullets
         let currentB = boss[i];
         
@@ -143,13 +143,13 @@ function spawn3() {
             rect(currentB.x, currentB.y, currentB.w, currentB.h);
             currentB.x += currentB.speed;
 
-            if(boss[1].x > 300 || boss[1].x < 50) { //screen loop
+            if(boss[1].x > 300 || boss[1].x < 50) { //boss movement
                 boss[1].speed *= -1;
             }
-            if(boss[0].x > 340 || boss[0].x < 90) { //screen loop
+            if(boss[0].x > 340 || boss[0].x < 90) { //different if statements for boss parts keep the whole object together
                 boss[0].speed *= -1;
             }
-            if(boss[2].x > 440 || boss[2].x < 190) { //screen loop
+            if(boss[2].x > 440 || boss[2].x < 190) { 
                 boss[2].speed *= -1;
             }
             
@@ -173,7 +173,7 @@ function spawn3() {
     
 }
 
-function projectiles1() { //Projectiles
+function projectiles1() { //Projectiles  management
     if (proTimer == 20) { //projectile cooldown --- holding space will cause the projectile to rapid fire a short distance
         proTimer = 0;
         noUse = false;
@@ -208,7 +208,7 @@ function projectiles1() { //Projectiles
             }
         }
         for (var i = 0; i < rectanglesD.length; i++) {
-            if (collideRect(currentP.x, currentP.y, boss[i].x, boss[i].y, boss[i].w, boss[i].h) == true) {  //collision for spawn2()
+            if (collideRect(currentP.x, currentP.y, boss[i].x, boss[i].y, boss[i].w, boss[i].h) == true) {  //collision for spawn3()
                 console.log("hit");
                 currentP.x = 999; //put off screen
                 if (bossHP > 0) {
@@ -227,15 +227,14 @@ function projectiles1() { //Projectiles
 }
 
 
-function projectiles2() { //Projectiles
+function projectiles2() { //Projectiles for boss
     for(var i = 0; i < bossP.length; i++) { 
         fill(255, 200, 50);
         let currentBP = bossP[i];
         rect(currentBP.x,currentBP.y, currentBP.w, currentBP.h);        
         currentBP.y += currentBP.speed;
 
-        
-        if (bossTimer > 181) { 
+        if (bossTimer > 181) {              //When reached fires projectile
             currentBP.x = boss[0].x + 20;
             currentBP.y = boss[0].y;
             console.log("fire!");
@@ -243,7 +242,7 @@ function projectiles2() { //Projectiles
         }
 
         for (var i = 0; i < bossP.length; i++) {
-            if (collideRect(Character.x, Character.y, bossP[i].x, bossP[i].y, bossP[i].w, bossP[i].h) == true) {
+            if (collideRect(Character.x, Character.y, bossP[i].x, bossP[i].y, bossP[i].w, bossP[i].h) == true) { //collsion with character
                 Character.color = [0, 0, 0];
                 didChange = true;
                 gameStart = false;
@@ -252,9 +251,6 @@ function projectiles2() { //Projectiles
         
     }
 }
-
-
-
 
 
 function setup() {
@@ -268,7 +264,7 @@ function draw() {
         Character.controls();
         Character.update(); //uses data from object
         spawn1();
-        if (time > 1000 && time < 2150) { //edit to have projectile finish before deleting!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (time > 1000 && time < 2150) { //have projectile finish before deleting
             spawn2();
         }
         if (time > 2000) {
@@ -282,12 +278,12 @@ function draw() {
         fill(255, 0, 0);
         text('Game Over', 75, 200);
     }
-    else if (gameWin == true) { //signals getting hit!!!
+    else if (gameWin == true) { //signals game win
         textSize(64);
         fill(255, 0, 255);
         text('YOU WIN!!!', 75, 200);
     }
-    else {
+    else { //Display at start of game!
         textSize(50);
         fill(0, 0, 0);
         text('Controls', 150, 150);
@@ -296,5 +292,6 @@ function draw() {
         text('Shoot:  Space Bar', 80, 250);
         text('Rapid Shot:  Hold Space Bar', 80, 300);
     }
-    time++; //Advance Time
+    time++; //Advance Time 
+            //Used to manage when certain objects appear
 }
